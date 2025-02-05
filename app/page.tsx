@@ -13,10 +13,19 @@ Amplify.configure(outputs);
 
 const client = generateClient<Schema>();
 
-export default function App() {
+export default  function App() {
   const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
 
   const { user, signOut } = useAuthenticator();
+
+  async function createPost(){
+    const { data, errors } = await client.mutations.addPost({
+      title: window.prompt("title of post"),
+      content: window.prompt("post content"),
+      author: window.prompt("author name")||"",
+    });
+    console.log(data, errors);
+  }
 
   function listTodos() {
     client.models.Todo.observeQuery().subscribe({
@@ -56,6 +65,8 @@ export default function App() {
           Review next steps of this tutorial.
         </a>
       </div>
+      <button onClick={createPost}>+ Post</button>
+
       <button onClick={signOut}>Sign out</button>
     </main>
   );
