@@ -20,6 +20,6 @@ const externalTable = aws_dynamodb.Table.fromTableName(
 
 
 backend.data.addDynamoDbDataSource(
-  "PostTable",
+  "MyPostTable",
   externalTable
 );
