@@ -1,6 +1,9 @@
 import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
 import { Post } from "./CustomType";
-import { addPost } from "./createPost";
+import { addPost } from "./mutation/createPost";
+import { getPost } from "./query/getPost";
+import { updatePost } from "./mutation/updatePost";
+import { deletePost } from "./mutation/deletePost";
 
 const schema = a.schema({
   Post,
@@ -11,6 +14,9 @@ const schema = a.schema({
     })
     .authorization((allow) => [allow.owner()]),
     addPost,
+    getPost,
+    updatePost,
+    deletePost,
 });
 
 export type Schema = ClientSchema<typeof schema>;

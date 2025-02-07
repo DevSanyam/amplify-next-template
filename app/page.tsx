@@ -13,16 +13,42 @@ Amplify.configure(outputs);
 
 const client = generateClient<Schema>();
 
-export default  function App() {
+export default function App() {
   const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
 
   const { user, signOut } = useAuthenticator();
 
-  async function createPost(){
+  async function createPost() {
     const { data, errors } = await client.mutations.addPost({
+      id: window.prompt("id of post"),
       title: window.prompt("title of post"),
       content: window.prompt("post content"),
-      author: window.prompt("author name")||"",
+      author: window.prompt("author name") || "",
+    });
+    console.log(data, errors);
+  }
+
+  async function getPost() {
+    const { data, errors } = await client.queries.getPost({
+      id: window.prompt("TPost id to fetch") || "",
+    });
+    console.log(data, errors);
+  }
+
+  async function updatePost() {
+    const { data, errors } = await client.mutations.updatePost({
+      id: window.prompt("id to update") || "",
+      title: window.prompt("title to update") || "",
+      author: window.prompt("author who update") || "",
+      content: window.prompt("Enter updated content") || "",
+      url: window.prompt("url to update") || "",
+      expectedVersion: Number(window.prompt("Expected version")) || 1,
+    });
+  }
+
+  async function deletePost() {
+    const { data, errors } = await client.mutations.deletePost({
+      id: window.prompt(" id to delete") || "",
     });
     console.log(data, errors);
   }
@@ -66,6 +92,9 @@ export default  function App() {
         </a>
       </div>
       <button onClick={createPost}>+ Post</button>
+      <button onClick={getPost}>+ getPost</button>
+      <button onClick={updatePost}>+ updatePost</button>
+      <button onClick={deletePost}>+ deletePost</button>
 
       <button onClick={signOut}>Sign out</button>
     </main>

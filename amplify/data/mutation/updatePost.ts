@@ -1,19 +1,19 @@
 import { a } from "@aws-amplify/backend";
 
-export const addPost = a
-  .mutation()
+export const updatePost= a.mutation()
   .arguments({
-    id: a.id(),
+    id: a.id().required(),
     author: a.string().required(),
     title: a.string(),
     content: a.string(),
     url: a.string(),
+    expectedVersion: a.integer().required(),
   })
   .returns(a.ref("Post"))
   .authorization((allow) => [allow.authenticated()])
   .handler(
     a.handler.custom({
       dataSource: "MyPostTable",
-      entry: "./addPost.js", // Path to the resolver function
+      entry: "../handler/updatePost.js", // Path to the resolver function
     })
   );
