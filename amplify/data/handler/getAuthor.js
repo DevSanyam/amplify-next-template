@@ -1,6 +1,5 @@
-import * as ddb from "@aws-appsync/utils/dynamodb";
+// import * as ddb from "@aws-appsync/utils/dynamodb";
 import { util } from "@aws-appsync/utils";
-
 // export function request(ctx) {
 //   return ddb.get({ key: { id: ctx.args.id } });
 // }

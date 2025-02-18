@@ -11,3 +11,10 @@ export const   Post = a.customType({
     downs: a.integer(),
     version: a.integer(),
   });
+
+  export const Author = a.customType({
+    id: a.id().required(),
+    name: a.string().required(),
+    email: a.string(),
+    phone: a.string()
+  });

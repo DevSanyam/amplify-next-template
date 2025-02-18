@@ -28,6 +28,22 @@ export default function App() {
     console.log(data, errors);
   }
 
+  async function createAuthor() {
+    const { data, errors } = await client.mutations.addAuthor({
+      id: window.prompt("id of author")||"",
+      name: window.prompt("name of author")||"",
+      email: window.prompt("author email"),
+      phone: window.prompt("author phone"),
+    });
+    console.log(data, errors);
+  }
+
+  async function getAuthor() {
+    const { data, errors } = await client.queries.getAuthor({
+      id: window.prompt("Author id to fetch") || "",
+    });
+    console.log(data, errors);
+  }
   async function getPost() {
     const { data, errors } = await client.queries.getPost({
       id: window.prompt("TPost id to fetch") || "",
@@ -35,6 +51,14 @@ export default function App() {
     console.log(data, errors);
   }
 
+  async function updateAuthor() {
+    const { data, errors } = await client.mutations.updateAuthor({
+      id: window.prompt("id to update") || "",
+      name: window.prompt("name to update"),
+      email: window.prompt("email to update"),
+      phone: window.prompt("Enter phone"),
+    });
+  }
   async function updatePost() {
     const { data, errors } = await client.mutations.updatePost({
       id: window.prompt("id to update") || "",
@@ -46,6 +70,12 @@ export default function App() {
     });
   }
 
+  async function deleteAuthor() {
+    const { data, errors } = await client.mutations.deleteAuthor({
+      id: window.prompt(" id to delete") || "",
+    });
+    console.log(data, errors);
+  }
   async function deletePost() {
     const { data, errors } = await client.mutations.deletePost({
       id: window.prompt(" id to delete") || "",
@@ -92,9 +122,13 @@ export default function App() {
         </a>
       </div>
       <button onClick={createPost}>+ Post</button>
+      <button onClick={createAuthor}>+ Author</button>
       <button onClick={getPost}>+ getPost</button>
+      <button onClick={getAuthor}>+ getAuthor</button>
       <button onClick={updatePost}>+ updatePost</button>
+      <button onClick={updateAuthor}>+ updateAuthor</button>
       <button onClick={deletePost}>+ deletePost</button>
+      <button onClick={deleteAuthor}>+ deleteAuthor</button>
 
       <button onClick={signOut}>Sign out</button>
     </main>
