@@ -1,5 +1,5 @@
 import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
-import { Author, Post } from "./CustomType";
+import { Author, Post} from "./CustomType";
 import { addPost } from "./mutation/createPost";
 import { getPost } from "./query/getPost";
 import { updatePost } from "./mutation/updatePost";
@@ -8,6 +8,7 @@ import { addAuthor } from "./mutation/createAuthor";
 import { getAuthor } from "./query/getAuthor";
 import { updateAuthor } from "./mutation/updateAuthor";
 import { deleteAuthor } from "./mutation/deleteAuthor";
+import { scanItems } from "./query/scan";
 
 const schema = a.schema({
   Post,
@@ -25,7 +26,8 @@ const schema = a.schema({
     addAuthor,
     getAuthor,
     updateAuthor,
-    deleteAuthor
+    deleteAuthor,
+    scanItems,
 });
 
 export type Schema = ClientSchema<typeof schema>;

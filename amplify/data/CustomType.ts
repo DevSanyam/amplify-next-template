@@ -2,8 +2,8 @@ import { a } from "@aws-amplify/backend";
 
 
 export const   Post = a.customType({
-    id: a.id().required(),
-    author: a.string().required(),
+    id: a.id(),
+    author: a.string(),
     title: a.string(),
     content: a.string(),
     url: a.string(),

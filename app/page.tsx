@@ -30,8 +30,8 @@ export default function App() {
 
   async function createAuthor() {
     const { data, errors } = await client.mutations.addAuthor({
-      id: window.prompt("id of author")||"",
-      name: window.prompt("name of author")||"",
+      id: window.prompt("id of author") || "",
+      name: window.prompt("name of author") || "",
       email: window.prompt("author email"),
       phone: window.prompt("author phone"),
     });
@@ -47,6 +47,12 @@ export default function App() {
   async function getPost() {
     const { data, errors } = await client.queries.getPost({
       id: window.prompt("TPost id to fetch") || "",
+    });
+    console.log(data, errors);
+  }
+  async function getPostByAuthor() {
+    const { data, errors } = await client.queries.scanItems({
+      // owner: window.prompt("ownerId") || "f1035dca-90d1-70a3-4ce2-4742e7b7d086::f1035dca-90d1-70a3-4ce2-4742e7b7d086",
     });
     console.log(data, errors);
   }
@@ -129,6 +135,7 @@ export default function App() {
       <button onClick={updateAuthor}>+ updateAuthor</button>
       <button onClick={deletePost}>+ deletePost</button>
       <button onClick={deleteAuthor}>+ deleteAuthor</button>
+      <button onClick={getPostByAuthor}>+ Query</button>
 
       <button onClick={signOut}>Sign out</button>
     </main>
