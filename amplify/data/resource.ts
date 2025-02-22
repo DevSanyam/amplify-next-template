@@ -9,6 +9,7 @@ import { getAuthor } from "./query/getAuthor";
 import { updateAuthor } from "./mutation/updateAuthor";
 import { deleteAuthor } from "./mutation/deleteAuthor";
 import { scanItems } from "./query/scan";
+import { allPostsByAuthor } from "./query/PostsByAuthor";
 
 const schema = a.schema({
   Post,
@@ -28,6 +29,7 @@ const schema = a.schema({
     updateAuthor,
     deleteAuthor,
     scanItems,
+    allPostsByAuthor,
 });
 
 export type Schema = ClientSchema<typeof schema>;

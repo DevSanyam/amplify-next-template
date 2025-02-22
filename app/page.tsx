@@ -51,8 +51,8 @@ export default function App() {
     console.log(data, errors);
   }
   async function getPostByAuthor() {
-    const { data, errors } = await client.queries.scanItems({
-      // owner: window.prompt("ownerId") || "f1035dca-90d1-70a3-4ce2-4742e7b7d086::f1035dca-90d1-70a3-4ce2-4742e7b7d086",
+    const { data, errors } = await client.queries.allPostsByAuthor({
+      author: window.prompt("ownerId") || "",
     });
     console.log(data, errors);
   }
