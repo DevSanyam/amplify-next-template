@@ -10,6 +10,8 @@ export const   Post = a.customType({
     ups: a.integer(),
     downs: a.integer(),
     version: a.integer(),
+    expectedVersion: a.integer(),
+    upvotes: a.integer(),
   });
 
   export const Author = a.customType({
