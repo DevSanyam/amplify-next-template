@@ -20,3 +20,12 @@ export const   Post = a.customType({
     email: a.string(),
     phone: a.string()
   });
+  export const TransactionResult = a.customType({
+    keys_post_id: a.id(),
+    keys_author_id: a.id(),
+    cancellation_type: a.string(),
+    cancellation_message: a.string(),
+    cancellation_post_id: a.id(),
+    cancellation_post_title: a.string(),
+    cancellation_post_description: a.string(),
+  });

@@ -53,6 +53,12 @@ export default function App() {
   async function getPostByAuthor() {
     const { data, errors } = await client.queries.allPostsByAuthor({
       author: window.prompt("ownerId") || "",
+    //   postId: window.prompt("postId") || "",
+    // authorId: window.prompt("authorId") || "",
+    // title: window.prompt("title") || "",
+    // description: window.prompt("content") || "",
+    // oldTitle: window.prompt("oldTitle") || "",
+    // authorName: window.prompt("author name") || "",
     });
     console.log(data, errors);
   }
