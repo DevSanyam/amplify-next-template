@@ -8,6 +8,6 @@ export const getAuthor = a
   .handler(
     a.handler.custom({
       dataSource: "MyAuthorTable",
-      entry: "../handler/getAuthor.js", // Path to the resolver function
+      entry: "../handler/Author/getAuthor.js", // Path to the resolver function
     })
   );

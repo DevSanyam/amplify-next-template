@@ -1,33 +1,46 @@
 import { util } from "@aws-appsync/utils";
 
 export function request(ctx) {
-  const { authorId, postId, title, description, oldTitle, authorName } =
-    ctx.args;
+  const { authorId, postId, title, content, oldTitle, authorName } = ctx.args;
+
+  console.log("Received input:", ctx.args); // Debugging
+
   return {
     operation: "TransactWriteItems",
     transactItems: [
       {
-        table: "MyPostTable",
-        operation: "PutItem",
-        key: util.dynamodb.toMapValues({ postId }),
-        attributeValues: util.dynamodb.toMapValues({ title, description }),
-        condition: {
-            expression: "title = :oldTitle",
-            expressionValues: util.dynamodb.toMapValues({ ":oldTitle": oldTitle }),
-          },          
+        table: "PostTable",
+        operation: "PutItem", 
+        key: util.dynamodb.toMapValues({ id:postId }),
+        attributeValues: util.dynamodb.toMapValues({ title:title, content:content }),
+        // condition: {
+        //   expression: "title = :oldTitle",
+        //   expressionValues: util.dynamodb.toMapValues({ ":oldTitle": oldTitle }),
+        // },          
       },
       {
-        table: "MyAuthorTable",
+        table: "AuthorTable",
         operation: "UpdateItem",
-        key: util.dynamodb.toMapValues({ authorId }),
+        key: util.dynamodb.toMapValues({ id:authorId }),
         update: {
-          expression: "SET author = :name",
-          expressionValues: util.dynamodb.toMapValues({ ":name": authorName }),
+          expression: "SET #name = :aname",
+          expressionValues: util.dynamodb.toMapValues({ ":aname": authorName }),
+          expressionNames: { "#name": "name" },
         },
       },
     ],
   };
 }
+
 export function response(ctx) {
-  return ctx.result;
+  if (ctx.error) {
+    console.error("Transaction Error:", ctx.error);
+    util.error(ctx.error.message, ctx.error.type, null, ctx.result.cancellationReasons);
+  }
+
+  // Extract keys from transaction result
+  const posts = ctx.result.keys?.[0] ? [ctx.result.keys[0]] : [];
+  const authors = ctx.result.keys?.[1] ? [ctx.result.keys[1]] : [];
+
+  return { post: posts, Author: authors };
 }

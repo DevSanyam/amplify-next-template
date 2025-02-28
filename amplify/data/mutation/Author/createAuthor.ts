@@ -13,6 +13,6 @@ export const addAuthor = a
   .handler(
     a.handler.custom({
       dataSource: "MyAuthorTable",
-      entry: "../handler/addAuthor.js", // Path to the resolver function
+      entry: "../../handler/Author/addAuthor.js", // Path to the resolver function
     })
   );

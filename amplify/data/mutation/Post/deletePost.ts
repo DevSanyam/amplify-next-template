@@ -11,6 +11,6 @@ export const deletePost = a
   .handler(
     a.handler.custom({
       dataSource: "MyPostTable",
-      entry: "../handler/deletePost.js", // Path to the resolver function
+      entry: "../../handler/Post/deletePost.js", // Path to the resolver function
     })
   );

@@ -53,12 +53,30 @@ export default function App() {
   async function getPostByAuthor() {
     const { data, errors } = await client.queries.allPostsByAuthor({
       author: window.prompt("ownerId") || "",
-    //   postId: window.prompt("postId") || "",
-    // authorId: window.prompt("authorId") || "",
-    // title: window.prompt("title") || "",
-    // description: window.prompt("content") || "",
-    // oldTitle: window.prompt("oldTitle") || "",
-    // authorName: window.prompt("author name") || "",
+      //   postId: window.prompt("postId") || "",
+      // authorId: window.prompt("authorId") || "",
+      // title: window.prompt("title") || "",
+      // description: window.prompt("content") || "",
+      // oldTitle: window.prompt("oldTitle") || "",
+      // authorName: window.prompt("author name") || "",
+    });
+    console.log(data, errors);
+  }
+
+  async function updatePostAndAuthor() {
+    const { data, errors } = await client.mutations.updatePostAndAuthor({
+      postId: "oneasdf",
+      authorId: "2405",
+      title: "qwerty",
+      content: "qwertyuiop",
+      oldTitle: "Verify",
+      authorName: "S.S",
+      //   postId: window.prompt("postId") || "one",
+      // authorId: window.prompt("authorId") || "2404",
+      // title: window.prompt("title") || "qwerty",
+      // description: window.prompt("content") || "qwertyuiop",
+      // oldTitle: window.prompt("oldTitle") || "Verify",
+      // authorName: window.prompt("author name") || "S.S",
     });
     console.log(data, errors);
   }
@@ -142,6 +160,7 @@ export default function App() {
       <button onClick={deletePost}>+ deletePost</button>
       <button onClick={deleteAuthor}>+ deleteAuthor</button>
       <button onClick={getPostByAuthor}>+ Query</button>
+      <button onClick={updatePostAndAuthor}>+ updatePostAndAuthor</button>
 
       <button onClick={signOut}>Sign out</button>
     </main>

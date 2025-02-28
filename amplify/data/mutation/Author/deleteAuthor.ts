@@ -8,6 +8,6 @@ export const deleteAuthor = a
     .handler(
       a.handler.custom({
         dataSource: "MyAuthorTable",
-        entry: "../handler/deleteAuthor.js", // Path to the resolver function
+        entry: "../../handler/Author/deleteAuthor.js", // Path to the resolver function
       })
     );
