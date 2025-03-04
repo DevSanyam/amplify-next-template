@@ -11,6 +11,7 @@ import { deleteAuthor } from "./mutation/Author/deleteAuthor";
 import { scanItems } from "./query/scan";
 import { allPostsByAuthor } from "./query/PostsByAuthor";
 import { updatePostAndAuthor } from "./mutation/TransactWriteItems";
+import { onAddPost } from "./mutation/Post/SubPost";
 
 const schema = a.schema({
   Post,
@@ -33,6 +34,7 @@ const schema = a.schema({
   scanItems,
   allPostsByAuthor,
   updatePostAndAuthor,
+  onAddPost,
 });
 
 export type Schema = ClientSchema<typeof schema>;
