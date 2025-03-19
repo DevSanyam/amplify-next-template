@@ -168,7 +168,7 @@ const blog = () => {
       <button onClick={deletePost}>+ deletePost</button>
       <button onClick={deleteAuthor}>+ deleteAuthor</button>
       <button onClick={getPostByAuthor}>+ Query</button>
-      <button onClick={updatePostAndAuthor}>+ updatePostAndAuthor</button>
+      <button onClick={updatePostAndAuthor}>TransactWriteItem</button>
       <button onClick={transactgetitem}>TransactGetItem</button>
     </div>
   );
