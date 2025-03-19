@@ -14,6 +14,6 @@ export const updatePost= a.mutation()
   .handler(
     a.handler.custom({
       dataSource: "MyPostTable",
-      entry: "../../handler/Post/updatePost.js", // Path to the resolver function
+      entry: "../../handler/Post/updatePost.js",
     })
   );

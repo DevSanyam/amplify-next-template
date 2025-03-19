@@ -1,30 +1,29 @@
 import { util } from "@aws-appsync/utils";
-import * as ddb from "@aws-appsync/utils/dynamodb";
-
-// export function request(ctx) {
-//   const { id, expectedVersion, ...rest } = ctx.args;
-//   const values = Object.entries(rest).reduce((obj, [key, value]) => {
-//     obj[key] = value ?? ddb.operations.remove();
-//     return obj;
-//   }, {});
-
-//   return ddb.update({
-//     key: { id },
-//     condition: { version: { eq: expectedVersion } },
-//     update: { ...values, version: ddb.operations.increment(1) },
-//   });
-// }
 
 export function request(ctx) {
-  const { id, expectedVersion, ...rest } = ctx.args;
+  const { id, title,expectedVersion, author, content, url } = ctx.args;
+
   return {
     operation: 'UpdateItem',
     key: util.dynamodb.toMapValues({ id }),
     update: {
-      expression: 'ADD #voteField :plusOne, version :plusOne',
-      expressionNames: { '#voteField': 'upvotes' },
-      expressionValues: { ':plusOne': { N: 1 } }
-    }
+      expression: 'ADD #voteField :plusOne, version :plusOne SET title = :title, author = :author, content = :content, #url = :url',
+      expressionNames: { '#voteField': 'upvotes','#url':'url' },
+      expressionValues: util.dynamodb.toMapValues({
+        ":plusOne": 1,
+        ":title": title,
+        ":author": author,
+        ":content": content,
+        ":url": url,
+        ":expectedVersion": expectedVersion,
+      }),
+    },
+    condition: {
+      expression: "attribute_exists(id) AND version = :expectedVersion",
+      expressionValues: util.dynamodb.toMapValues({
+        ":expectedVersion": expectedVersion,
+      }),
+    },
   };
 }
 

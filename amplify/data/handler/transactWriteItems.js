@@ -10,18 +10,23 @@ export function request(ctx) {
     transactItems: [
       {
         table: "PostTable",
-        operation: "PutItem", 
-        key: util.dynamodb.toMapValues({ id:postId }),
-        attributeValues: util.dynamodb.toMapValues({ title:title, content:content }),
-        // condition: {
-        //   expression: "title = :oldTitle",
-        //   expressionValues: util.dynamodb.toMapValues({ ":oldTitle": oldTitle }),
-        // },          
+        operation: "PutItem",
+        key: util.dynamodb.toMapValues({ id: postId }),
+        attributeValues: util.dynamodb.toMapValues({
+          title: title,
+          content: content,
+        }),
+        condition: {
+          expression: "attribute_not_exists(id) OR title = :oldTitle",
+          expressionValues: util.dynamodb.toMapValues({
+            ":oldTitle": oldTitle,
+          }),
+        },
       },
       {
         table: "AuthorTable",
         operation: "UpdateItem",
-        key: util.dynamodb.toMapValues({ id:authorId }),
+        key: util.dynamodb.toMapValues({ id: authorId }),
         update: {
           expression: "SET #name = :aname",
           expressionValues: util.dynamodb.toMapValues({ ":aname": authorName }),
@@ -35,7 +40,12 @@ export function request(ctx) {
 export function response(ctx) {
   if (ctx.error) {
     console.error("Transaction Error:", ctx.error);
-    util.error(ctx.error.message, ctx.error.type, null, ctx.result.cancellationReasons);
+    util.error(
+      ctx.error.message,
+      ctx.error.type,
+      null,
+      ctx.result.cancellationReasons
+    );
   }
 
   // Extract keys from transaction result

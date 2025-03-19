@@ -9,14 +9,35 @@ const client = generateClient<Schema>();
 const blog = () => {
   const [posts, setPosts] = useState<Array<Schema["Post"]["type"]>>([]);
 
+  // function listPosts() {
+  //   client.subscriptions.onAddPost().subscribe({
+  //     next: (newPost) => {
+  //       setPosts((prevPosts) => {
+  //         if (prevPosts.some((post) => post.id === newPost.id)) {
+  //           return prevPosts;
+  //         }
+  //         return [...prevPosts, newPost];
+  //       });
+  //     },
+  //     error: (error) => {
+  //       console.error("Subscription error:", error);
+  //     },
+  //   });
+  // }
+
   function listPosts() {
     client.subscriptions.onAddPost().subscribe({
       next: (newPost) => {
         setPosts((prevPosts) => {
-          // Only add the new post if it's not already in the list
-          if (prevPosts.some((post) => post.id === newPost.id)) {
-            return prevPosts;
+          const existingIndex = prevPosts.findIndex((post) => post.id === newPost.id);
+
+          if (existingIndex !== -1) {
+            // If post exists, replace it with the updated post
+            const updatedPosts = [...prevPosts];
+            updatedPosts[existingIndex] = newPost;
+            return updatedPosts;
           }
+
           return [...prevPosts, newPost];
         });
       },
@@ -24,8 +45,9 @@ const blog = () => {
         console.error("Subscription error:", error);
       },
     });
-  }
+}
 
+  
   useEffect(() => {
     listPosts();
   }, []);
@@ -65,30 +87,26 @@ const blog = () => {
   async function getPostByAuthor() {
     const { data, errors } = await client.queries.allPostsByAuthor({
       author: window.prompt("ownerId") || "",
-      //   postId: window.prompt("postId") || "",
-      // authorId: window.prompt("authorId") || "",
-      // title: window.prompt("title") || "",
-      // description: window.prompt("content") || "",
-      // oldTitle: window.prompt("oldTitle") || "",
-      // authorName: window.prompt("author name") || "",
     });
     console.log(data, errors);
   }
-
+  
+  async function transactgetitem(){
+    const { data, errors } = await client.queries.TransactGetItem({
+      postId: window.prompt("postId") || "",
+      authorId: window.prompt("authorId") || "",
+    });
+    console.log(data, errors);
+  }
+  
   async function updatePostAndAuthor() {
     const { data, errors } = await client.mutations.updatePostAndAuthor({
-      postId: "oneasdf",
-      authorId: "2405",
-      title: "qwerty",
-      content: "qwertyuiop",
-      oldTitle: "Verify",
-      authorName: "S.S",
-      //   postId: window.prompt("postId") || "one",
-      // authorId: window.prompt("authorId") || "2404",
-      // title: window.prompt("title") || "qwerty",
-      // description: window.prompt("content") || "qwertyuiop",
-      // oldTitle: window.prompt("oldTitle") || "Verify",
-      // authorName: window.prompt("author name") || "S.S",
+      postId: (window.prompt("postId"))||"",
+      authorId:(window.prompt("authorId"))||"",
+      title: window.prompt("title")||"",
+      content: window.prompt("content")||"",
+      oldTitle: window.prompt("oldTitle")||"",
+      authorName: window.prompt("authorName")||"",
     });
     console.log(data, errors);
   }
@@ -121,6 +139,7 @@ const blog = () => {
   async function deletePost() {
     const { data, errors } = await client.mutations.deletePost({
       id: window.prompt(" id to delete") || "",
+      expectedVersion: Number(window.prompt("Expected version")),
     });
     console.log(data, errors);
   }
@@ -130,7 +149,7 @@ const blog = () => {
       <h1>Blog</h1>
       <ul>
         {posts.map((post) => (
-          <li key={post.id}>{post.content}</li>
+          <li key={post.id}>{post.title} :- {post.content}</li>
         ))}
       </ul>
       <div>
@@ -150,6 +169,7 @@ const blog = () => {
       <button onClick={deleteAuthor}>+ deleteAuthor</button>
       <button onClick={getPostByAuthor}>+ Query</button>
       <button onClick={updatePostAndAuthor}>+ updatePostAndAuthor</button>
+      <button onClick={transactgetitem}>TransactGetItem</button>
     </div>
   );
 };

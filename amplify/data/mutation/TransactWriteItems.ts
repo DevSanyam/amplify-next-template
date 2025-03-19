@@ -1,6 +1,7 @@
 import { a } from "@aws-amplify/backend";
 
-export const updatePostAndAuthor = a.mutation()
+export const updatePostAndAuthor = a
+  .mutation()
   .arguments({
     postId: a.id().required(),
     title: a.string().required(),
@@ -9,11 +10,12 @@ export const updatePostAndAuthor = a.mutation()
     authorId: a.id().required(),
     authorName: a.string().required(),
   })
-  .returns(a.ref("KeyType"))
+  .returns(a.ref("KeyType3"))
   .authorization((allow) => [allow.authenticated()])
   .handler(
     a.handler.custom({
-        dataSource:"MyPostTable",
+      dataSource: "MyPostTable",
       entry: "../handler/transactWriteItems.js", // Path to the custom handler
-    })
+    }) 
   );
+  
