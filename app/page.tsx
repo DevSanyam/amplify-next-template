@@ -61,6 +61,7 @@ export default function App() {
       
 
       <Link href="./blog">Go to Blog</Link>
+      <Link href="./storage">Go to Storage</Link>
 
       <button onClick={signOut}>Sign out</button>
     </main>

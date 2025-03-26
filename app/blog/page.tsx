@@ -1,6 +1,8 @@
 "use client";
 import { generateClient } from "aws-amplify/data";
+import { uploadData, getUrl } from "aws-amplify/storage";
 import type { Schema } from "@/amplify/data/resource";
+import "../app.css";
 
 import { useEffect, useState } from "react";
 
@@ -9,27 +11,18 @@ const client = generateClient<Schema>();
 const blog = () => {
   const [posts, setPosts] = useState<Array<Schema["Post"]["type"]>>([]);
 
-  // function listPosts() {
-  //   client.subscriptions.onAddPost().subscribe({
-  //     next: (newPost) => {
-  //       setPosts((prevPosts) => {
-  //         if (prevPosts.some((post) => post.id === newPost.id)) {
-  //           return prevPosts;
-  //         }
-  //         return [...prevPosts, newPost];
-  //       });
-  //     },
-  //     error: (error) => {
-  //       console.error("Subscription error:", error);
-  //     },
-  //   });
-  // }
+  // storage
+  
+
+  // storage
 
   function listPosts() {
     client.subscriptions.onAddPost().subscribe({
       next: (newPost) => {
         setPosts((prevPosts) => {
-          const existingIndex = prevPosts.findIndex((post) => post.id === newPost.id);
+          const existingIndex = prevPosts.findIndex(
+            (post) => post.id === newPost.id
+          );
 
           if (existingIndex !== -1) {
             // If post exists, replace it with the updated post
@@ -45,9 +38,8 @@ const blog = () => {
         console.error("Subscription error:", error);
       },
     });
-}
+  }
 
-  
   useEffect(() => {
     listPosts();
   }, []);
@@ -90,23 +82,23 @@ const blog = () => {
     });
     console.log(data, errors);
   }
-  
-  async function transactgetitem(){
+
+  async function transactgetitem() {
     const { data, errors } = await client.queries.TransactGetItem({
       postId: window.prompt("postId") || "",
       authorId: window.prompt("authorId") || "",
     });
     console.log(data, errors);
   }
-  
+
   async function updatePostAndAuthor() {
     const { data, errors } = await client.mutations.updatePostAndAuthor({
-      postId: (window.prompt("postId"))||"",
-      authorId:(window.prompt("authorId"))||"",
-      title: window.prompt("title")||"",
-      content: window.prompt("content")||"",
-      oldTitle: window.prompt("oldTitle")||"",
-      authorName: window.prompt("authorName")||"",
+      postId: window.prompt("postId") || "",
+      authorId: window.prompt("authorId") || "",
+      title: window.prompt("title") || "",
+      content: window.prompt("content") || "",
+      oldTitle: window.prompt("oldTitle") || "",
+      authorName: window.prompt("authorName") || "",
     });
     console.log(data, errors);
   }
@@ -149,7 +141,9 @@ const blog = () => {
       <h1>Blog</h1>
       <ul>
         {posts.map((post) => (
-          <li key={post.id}>{post.title} :- {post.content}</li>
+          <li key={post.id}>
+            {post.title} :- {post.content}
+          </li>
         ))}
       </ul>
       <div>
@@ -159,6 +153,8 @@ const blog = () => {
           Review next steps of this tutorial.
         </a>
       </div>
+      <main>
+     
       <button onClick={createPost}>+ Post</button>
       <button onClick={createAuthor}>+ Author</button>
       <button onClick={getPost}>+ getPost</button>
@@ -170,6 +166,8 @@ const blog = () => {
       <button onClick={getPostByAuthor}>+ Query</button>
       <button onClick={updatePostAndAuthor}>TransactWriteItem</button>
       <button onClick={transactgetitem}>TransactGetItem</button>
+     
+      </main>
     </div>
   );
 };
