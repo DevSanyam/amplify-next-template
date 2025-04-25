@@ -18,4 +18,3 @@ export const updatePostAndAuthor = a
       entry: "../handler/transactWriteItems.js", // Path to the custom handler
     }) 
   );
-  
