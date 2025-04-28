@@ -2,7 +2,7 @@
 
 import React from "react";
 import { uploadData } from "aws-amplify/storage";
-import { FileUploader } from "@aws-amplify/ui-react-storage";
+import { FileUploader, StorageImage} from "@aws-amplify/ui-react-storage";
 import "@aws-amplify/ui-react/styles.css";
 
 const storage = () => {
@@ -48,6 +48,7 @@ const storage = () => {
         maxFileCount={1}
         isResumable
       />
+      <StorageImage alt="cat" path="picture-submissions/13891.jpg" />
     </div>
   );
 };
