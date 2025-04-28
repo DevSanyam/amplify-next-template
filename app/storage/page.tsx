@@ -1,12 +1,21 @@
 "use client";
 
 import React from "react";
-import { uploadData } from "aws-amplify/storage";
-import { FileUploader, StorageImage} from "@aws-amplify/ui-react-storage";
+import { uploadData, getUrl } from "aws-amplify/storage";
+import { FileUploader, StorageImage } from "@aws-amplify/ui-react-storage";
 import "@aws-amplify/ui-react/styles.css";
 
 const storage = () => {
   const [file, setFile] = React.useState<File | null>(null);
+
+  const linkToStorageFile = async () => {
+    const linkTS = await getUrl({
+      path: "picture-submissions/13891.jpg",
+      // Alternatively, path: ({identityId}) => `album/${identityId}/1.jpg`
+    });
+    console.log("signed URL: ", linkTS.url);
+    console.log("URL expires at: ", linkTS.expiresAt);
+  };
 
   const handleChange = (event: any) => {
     setFile(event.target.files?.[0]);
@@ -48,7 +57,8 @@ const storage = () => {
         maxFileCount={1}
         isResumable
       />
-      <StorageImage alt="cat" path="picture-submissions/13891.jpg" />
+      {/* <StorageImage alt="cat" path="picture-submissions/13891.jpg" /> */}
+      <button onClick={linkToStorageFile}>get link</button>
     </div>
   );
 };
