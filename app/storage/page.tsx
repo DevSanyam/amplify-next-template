@@ -67,26 +67,23 @@
 "use client";
 
 import React from "react";
-import { uploadData, getUrl } from "aws-amplify/storage";
+import { uploadData, getUrl, list } from "aws-amplify/storage";
 import { FileUploader } from "@aws-amplify/ui-react-storage";
 import "@aws-amplify/ui-react/styles.css";
 
 const StoragePage = () => {
   const [file, setFile] = React.useState<File | null>(null);
-  const [signedUrl, setSignedUrl] = React.useState<string | null>(null); // 💬 For displaying URL
-  const [fileName, setFileName] = React.useState<string>("");
+  const [fileUrl, setFileUrl] = React.useState<string | null>(null);
+  const [fileList, setFileList] = React.useState<string[]>([]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files?.length) {
-      const selectedFile = event.target.files[0];
-      setFile(selectedFile);
-      setFileName(selectedFile.name);
-    }
+    setFile(event.target.files?.[0] || null);
   };
 
-  const handleClick = async () => {
-    if (!file) return;
+  const handleUpload = async () => {
     try {
+      if (!file) return;
+
       const result = await uploadData({
         path: `picture-submissions/${file.name}`,
         data: file,
@@ -94,60 +91,98 @@ const StoragePage = () => {
           onProgress: ({ transferredBytes, totalBytes }) => {
             if (totalBytes) {
               console.log(
-                `Upload progress ${Math.round(
+                `Upload progress: ${Math.round(
                   (transferredBytes / totalBytes) * 100
-                )} %`
+                )}%`
               );
             }
           },
         },
       }).result;
+
       console.log("File uploaded successfully", result.path);
+      alert("Upload successful!");
     } catch (error) {
       console.log("Error uploading file: ", error);
     }
   };
 
-  const linkToStorageFile = async () => {
+  const handleGetUrl = async () => {
     try {
-      if (!fileName) {
-        alert("Upload a file first!");
-        return;
-      }
-      const linkTS = await getUrl({
-        path: `picture-submissions/${fileName}`, // use uploaded file name
+      const result = await getUrl({
+        path: "picture-submissions/13891.jpg",
       });
-      console.log("signed URL: ", linkTS.url);
-      setSignedUrl(linkTS.url.toString()); // Save signed URL in state
+      console.log("Signed URL:", result.url);
+      setFileUrl(result.url.toString());
     } catch (error) {
-      console.error("Error getting signed URL:", error);
+      console.error("Error getting URL:", error);
+    }
+  };
+
+  const handleListFiles = async () => {
+    try {
+      const result = await list({
+        path: "picture-submissions/",
+      });
+      console.log("Listed files:", result.items);
+
+      const fileNames = result.items.map((item) => item.path);
+      setFileList(fileNames);
+    } catch (error) {
+      console.error("Error listing files:", error);
     }
   };
 
   return (
-    <div>
-      <h1>Storage Upload + Get Link</h1>
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-4">Storage Page</h1>
 
-      <input type="file" onChange={handleChange} />
-      <button onClick={handleClick}>Upload to picture-submissions</button>
+      {/* Upload section */}
+      <input type="file" onChange={handleChange} className="mb-2" />
+      <button onClick={handleUpload} className="px-4 py-2 bg-blue-500 text-white rounded mr-2">
+        Upload to picture-submissions
+      </button>
 
-      <FileUploader
-        acceptedFileTypes={["image/*"]}
-        path="public/"
-        maxFileCount={1}
-        isResumable
-      />
+      {/* Get URL section */}
+      <button onClick={handleGetUrl} className="px-4 py-2 bg-green-500 text-white rounded mr-2">
+        Get Download Link
+      </button>
 
-      <button onClick={linkToStorageFile}>Get File Link</button>
+      {/* List files section */}
+      <button onClick={handleListFiles} className="px-4 py-2 bg-purple-500 text-white rounded">
+        List Files
+      </button>
 
-      {/* Show Link if available */}
-      {signedUrl && (
-        <div style={{ marginTop: "20px" }}>
-          <a href={signedUrl} target="_blank" rel="noreferrer">
-            {fileName}
+      {/* Show download link */}
+      {fileUrl && (
+        <div className="mt-4">
+          <a href={fileUrl} target="_blank" rel="noreferrer" className="text-blue-700 underline">
+            Open Downloaded File
           </a>
         </div>
       )}
+
+      {/* Show listed files */}
+      {fileList.length > 0 && (
+        <div className="mt-6">
+          <h2 className="text-xl font-semibold mb-2">Files in picture-submissions:</h2>
+          <ul className="list-disc pl-6">
+            {fileList.map((filePath, index) => (
+              <li key={index}>{filePath}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Optionally: FileUploader UI component */}
+      <div className="mt-8">
+        <FileUploader
+          acceptedFileTypes={["image/*"]}
+          path="public/"
+          maxFileCount={1}
+          isResumable
+        />
+      </div>
     </div>
   );
 };
